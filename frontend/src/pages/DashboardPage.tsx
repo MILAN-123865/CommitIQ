@@ -44,8 +44,28 @@ import {
   FileText,
   FileJson,
   AlertTriangle,
+  Clock,
 } from 'lucide-react'
 import { ErrorBoundary } from '../components/ErrorBoundary'
+
+// Helper function to format relative time for "Last updated X ago"
+function formatTimeAgo(dateString?: string | null): string {
+  if (!dateString) return 'Never'
+  const date = new Date(dateString)
+  if (isNaN(date.getTime())) return 'Unknown'
+
+  const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000)
+  if (seconds < 60) return 'just now'
+  
+  const minutes = Math.floor(seconds / 60)
+  if (minutes < 60) return `${minutes} ${minutes === 1 ? 'minute' : 'minutes'} ago`
+  
+  const hours = Math.floor(minutes / 60)
+  if (hours < 24) return `${hours} ${hours === 1 ? 'hour' : 'hours'} ago`
+  
+  const days = Math.floor(hours / 24)
+  return `${days} ${days === 1 ? 'day' : 'days'} ago`
+}
 
 export default function DashboardPage() {
   const { repoSlug = '' } = useParams<{ repoSlug: string }>()
@@ -230,6 +250,8 @@ export default function DashboardPage() {
   }
 
   const latestScore = commits.length ? commits[commits.length - 1].health_score : 0
+  // last_analyzed_at may not be defined on the Repo type in some builds; fall back to last_job_completed_at
+  const lastUpdatedTimestamp = (repo as any).last_analyzed_at || repo.last_job_completed_at
 
   return (
     <div className="min-h-screen bg-transparent flex flex-col relative z-10 font-body">
@@ -269,6 +291,18 @@ export default function DashboardPage() {
             </div>
 
             <HealthBadge score={latestScore} size="md" />
+
+            {/* Issue #382: Last Updated timestamp in header */}
+            <div
+              className="hidden lg:flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/5 text-[11px] text-slate-400 font-medium"
+              data-testid="dashboard-header-last-updated"
+              title={lastUpdatedTimestamp ? `Last analysis job completed: ${new Date(lastUpdatedTimestamp).toLocaleString()}` : 'No previous analysis timestamp'}
+            >
+              <Clock className="w-3 h-3 text-purple-400" />
+              <span>
+                Last updated: <span className="text-slate-200">{formatTimeAgo(lastUpdatedTimestamp)}</span>
+              </span>
+            </div>
           </div>
 
           <div className="flex items-center gap-3">

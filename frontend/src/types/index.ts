@@ -28,6 +28,7 @@ export interface Repo {
   default_branch: string
   ingested_at: string | null
   last_updated_at: string | null
+  last_job_completed_at?: string | null
   total_commits: number
   analyzed_commits: number
   status: RepoStatus
