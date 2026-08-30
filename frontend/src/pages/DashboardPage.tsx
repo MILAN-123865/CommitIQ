@@ -22,6 +22,9 @@ import { CycleTimeDashboard } from '../components/CycleTimeDashboard'
 import { DoraMetricsDashboard } from '../components/DoraMetricsDashboard'
 import { TeamHealthDashboard } from '../components/TeamHealthDashboard'
 import { VelocityDashboard } from '../components/VelocityDashboard'
+import { ScheduledReportsDashboard } from '../components/ScheduledReportsDashboard'
+import { WeeklyDigestCard } from '../components/WeeklyDigestCard'
+import { RecommendationsCard } from '../components/RecommendationsCard'
 import { TimeRangeSelector, type TimeRangePreset } from '../components/TimeRangeSelector'
 import { HealthBadge } from '../components/ui/HealthBadge'
 import { ThemeToggle } from '../components/ui/ThemeToggle'
@@ -695,6 +698,8 @@ export default function DashboardPage() {
             </ErrorBoundary>
           </div>
 
+          {repoId && <WeeklyDigestCard repoId={repoId} />}
+
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
             {repoId && <CycleTimeDashboard repoId={repoId} />}
             {repoId && (
@@ -705,7 +710,6 @@ export default function DashboardPage() {
           {repoId && (
             <VelocityDashboard repoId={repoId} />
           )}
-
           {repoId && (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
               <div className="w-full">
@@ -737,6 +741,10 @@ export default function DashboardPage() {
               </div>
             </div>
           )}
+
+          {repoId && <RecommendationsCard repoId={repoId} />}
+
+          {repoId && <ScheduledReportsDashboard repoId={repoId} />}
 
           {repoId && (
             <HotspotMap
