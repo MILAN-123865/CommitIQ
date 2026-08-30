@@ -19,6 +19,7 @@ import type {
   TeamHealthMetrics,
   CodeQualityMetrics,
   RepoCompareResponse,
+  DeploymentTimeline,
 } from '../types'
 
 const API_BASE = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/+$/, '')
@@ -270,4 +271,17 @@ export async function streamNarrative(
   if (buffer.trim().startsWith('data: ')) {
     onChunk(JSON.parse(buffer.trim().slice(6)) as NarrativeStreamChunk)
   }
+}
+
+export async function getDeploymentTimeline(
+  repoId: string | number,
+  limit?: number
+): Promise<DeploymentTimeline> {
+  const params: Record<string, string> = {}
+  if (limit !== undefined) params.limit = String(limit)
+  return request<DeploymentTimeline>(
+    client.get(`/repos/${repoId}/deployments`, {
+      params: Object.keys(params).length ? params : undefined,
+    })
+  )
 }
