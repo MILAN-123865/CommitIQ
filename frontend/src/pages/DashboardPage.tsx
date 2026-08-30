@@ -21,6 +21,7 @@ import { NarrativeCard } from '../components/NarrativeCard'
 import { CycleTimeDashboard } from '../components/CycleTimeDashboard'
 import { DoraMetricsDashboard } from '../components/DoraMetricsDashboard'
 import { TeamHealthDashboard } from '../components/TeamHealthDashboard'
+import { VelocityDashboard } from '../components/VelocityDashboard'
 import { TimeRangeSelector, type TimeRangePreset } from '../components/TimeRangeSelector'
 import { HealthBadge } from '../components/ui/HealthBadge'
 import { ThemeToggle } from '../components/ui/ThemeToggle'
@@ -701,7 +702,9 @@ export default function DashboardPage() {
             )}
           </div>
 
-
+          {repoId && (
+            <VelocityDashboard repoId={repoId} />
+          )}
 
           {repoId && (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">

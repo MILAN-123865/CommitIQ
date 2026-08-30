@@ -492,6 +492,49 @@ export interface RepoCompareInsight {
   summary: string
 }
 
+export interface VelocityWeek {
+  label: string
+  week_start: string
+  commits: number
+  insertions: number
+  deletions: number
+  lines_changed: number
+  files_changed: number
+  contributor_count: number
+}
+
+export interface VelocityContributor {
+  name: string
+  email: string
+  commits: number
+  commit_pct: number
+  insertions: number
+  deletions: number
+  weeks_active: number
+  avg_commits_per_active_week: number
+}
+
+export interface VelocityTotals {
+  total_commits: number
+  total_insertions: number
+  total_deletions: number
+  num_weeks: number
+  num_active_contributors: number
+  avg_commits_per_week: number
+  avg_lines_per_week: number
+  avg_contributors_per_week: number
+  max_commit_streak_weeks: number
+  commit_deviation: number
+  lines_deviation: number
+  cadence_score: number
+}
+
+export interface VelocityMetrics {
+  weekly: VelocityWeek[]
+  totals: VelocityTotals
+  contributors: VelocityContributor[]
+}
+
 export interface RepoCompareResponse {
   base: RepoCompareItem
   head: RepoCompareItem

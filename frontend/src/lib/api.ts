@@ -19,6 +19,7 @@ import type {
   TeamHealthMetrics,
   CodeQualityMetrics,
   RepoCompareResponse,
+  VelocityMetrics,
 } from '../types'
 
 const API_BASE = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/+$/, '')
@@ -270,4 +271,8 @@ export async function streamNarrative(
   if (buffer.trim().startsWith('data: ')) {
     onChunk(JSON.parse(buffer.trim().slice(6)) as NarrativeStreamChunk)
   }
+}
+
+export async function getVelocityMetrics(repoId: string | number): Promise<VelocityMetrics> {
+  return request<VelocityMetrics>(client.get(`/metrics/repos/${repoId}/velocity`))
 }
