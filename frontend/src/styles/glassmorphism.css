@@ -1,0 +1,25 @@
+/* Design System Global Glassmorphic Token Definition */
+@layer components {
+  .btn-glass-primary {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    /* Standardized curvature criteria matching issue parameters */
+    border-radius: 9999px; /* equivalent to tailwind rounded-full */
+    color: #ffffff;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  }
+
+  .btn-glass-primary:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Apply unified curvature properties cleanly onto standard global primitives */
+  button, .btn {
+    border-radius: 9999px !important;
+  }
+}
