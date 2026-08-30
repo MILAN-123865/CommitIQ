@@ -1,34 +1,65 @@
 import { useEffect, useState } from 'react'
 
-function getStoredTheme(): 'light' | 'dark' | null {
+const THEME_KEY = 'theme'
+
+export function getStoredTheme(): 'light' | 'dark' | null {
   try {
-    const saved = window.localStorage?.getItem('theme')
+    const saved = window.localStorage?.getItem(THEME_KEY)
     return saved === 'light' || saved === 'dark' ? saved : null
   } catch {
     return null
   }
 }
 
-function storeTheme(theme: 'light' | 'dark') {
+export function getSystemTheme(): 'light' | 'dark' {
+  if (
+    typeof window !== 'undefined' &&
+    window.matchMedia &&
+    window.matchMedia('(prefers-color-scheme: dark)').matches
+  ) {
+    return 'dark'
+  }
+  return 'dark'
+}
+
+export function storeTheme(theme: 'light' | 'dark') {
   try {
-    window.localStorage?.setItem('theme', theme)
+    window.localStorage?.setItem(THEME_KEY, theme)
   } catch {
-    // Theme switching still works when storage is unavailable.
+    // Fallback when storage access is restricted
+  }
+}
+
+export function applyThemeToDocument(theme: 'light' | 'dark') {
+  const root = document.documentElement
+  if (theme === 'dark') {
+    root.classList.add('dark')
+    root.style.colorScheme = 'dark'
+  } else {
+    root.classList.remove('dark')
+    root.style.colorScheme = 'light'
   }
 }
 
 export function ThemeToggle() {
-  const [theme, setTheme] = useState<'light' | 'dark'>(() => getStoredTheme() || 'dark')
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    return getStoredTheme() || getSystemTheme()
+  })
 
   useEffect(() => {
-    const root = document.documentElement
-    if (theme === 'dark') {
-      root.classList.add('dark')
-    } else {
-      root.classList.remove('dark')
-    }
+    applyThemeToDocument(theme)
     storeTheme(theme)
   }, [theme])
+
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === THEME_KEY && (e.newValue === 'light' || e.newValue === 'dark')) {
+        setTheme(e.newValue)
+      }
+    }
+    window.addEventListener('storage', handleStorageChange)
+    return () => window.removeEventListener('storage', handleStorageChange)
+  }, [])
 
   const toggleTheme = () => {
     setTheme((prev) => (prev === 'light' ? 'dark' : 'light'))
@@ -39,11 +70,14 @@ export function ThemeToggle() {
       onClick={toggleTheme}
       className="relative flex items-center justify-between w-12 h-6 rounded-full p-0.5 cursor-pointer bg-elevated border border-border/80 hover:border-brand/40 transition-all duration-300 select-none shadow-inner focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/50 group"
       aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+      data-testid="theme-toggle-button"
     >
       <div
-        className={`w-5 h-5 rounded-full shadow-md flex items-center justify-center transform theme-knob-transition z-10
-          ${theme === 'dark' ? 'translate-x-[22px] bg-brand hover:bg-brand-hover text-primary' : 'translate-x-0 bg-yellow-500 text-white'}
-        `}
+        className={`w-5 h-5 rounded-full shadow-md flex items-center justify-center transform theme-knob-transition z-10 ${
+          theme === 'dark'
+            ? 'translate-x-[22px] bg-brand hover:bg-brand-hover text-primary'
+            : 'translate-x-0 bg-yellow-500 text-white'
+        }`}
       >
         {theme === 'dark' ? (
           <svg className="w-3.5 h-3.5 animate-pulse-slow" fill="currentColor" viewBox="0 0 20 20">
@@ -68,7 +102,9 @@ export function ThemeToggle() {
       </div>
 
       <span
-        className={`absolute left-1 transition-opacity duration-300 flex items-center justify-center w-5 h-5 ${theme === 'light' ? 'opacity-0' : 'opacity-40 group-hover:opacity-60'}`}
+        className={`absolute left-1 transition-opacity duration-300 flex items-center justify-center w-5 h-5 ${
+          theme === 'light' ? 'opacity-0' : 'opacity-40 group-hover:opacity-60'
+        }`}
       >
         <svg
           className="w-3.5 h-3.5 text-secondary"
@@ -87,7 +123,9 @@ export function ThemeToggle() {
       </span>
 
       <span
-        className={`absolute right-1 transition-opacity duration-300 flex items-center justify-center w-5 h-5 ${theme === 'dark' ? 'opacity-0' : 'opacity-40 group-hover:opacity-60'}`}
+        className={`absolute right-1 transition-opacity duration-300 flex items-center justify-center w-5 h-5 ${
+          theme === 'dark' ? 'opacity-0' : 'opacity-40 group-hover:opacity-60'
+        }`}
       >
         <svg className="w-3.5 h-3.5 text-secondary" fill="currentColor" viewBox="0 0 20 20">
           <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
