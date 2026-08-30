@@ -49,4 +49,4 @@ CommitIQ employs a hybrid AST and lexical analysis pipeline (integrating Radon a
 ### "AI narrative generation returns fallback template"
 
 - **Root Cause**: Unset or exhausted `GEMINI_API_KEY` / `ANTHROPIC_API_KEY`.
-- **Resolution**: Provide a valid Google Gemini API key in your `.env` file (`GEMINI_API_KEY=AIza...`). CommitIQ automatically falls back to an offline deterministic template if the external AI service is unreachable.
+- **Resolution**: Provide a valid Google Gemini API key in your `.env` file (`GEMINI_API_KEY=your_key_here...`). CommitIQ automatically falls back to an offline deterministic template if the external AI service is unreachable.
