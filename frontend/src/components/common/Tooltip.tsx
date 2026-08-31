@@ -1,6 +1,12 @@
-import React from 'react'
+import type { ReactNode } from 'react'
+import type { DoraThresholdInfo } from '../../constants/doraThresholds'
 
-export default function Tooltip({ children, content }) {
+export interface TooltipProps {
+  children: ReactNode
+  content: DoraThresholdInfo
+}
+
+export function Tooltip({ children, content }: TooltipProps) {
   return (
     <div className="group relative inline-block cursor-help">
       {children}
@@ -28,3 +34,5 @@ export default function Tooltip({ children, content }) {
     </div>
   )
 }
+
+export default Tooltip

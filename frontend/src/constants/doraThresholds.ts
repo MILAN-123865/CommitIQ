@@ -1,4 +1,12 @@
-export const DORA_THRESHOLDS = {
+export interface DoraThresholdInfo {
+  title: string
+  deploymentFrequency: string
+  leadTimeForChanges: string
+  timeToRestoreService: string
+  changeFailureRate: string
+}
+
+export const DORA_THRESHOLDS: Record<string, DoraThresholdInfo> = {
   ELITE: {
     title: 'Elite Performance',
     deploymentFrequency: 'Multiple times per day',

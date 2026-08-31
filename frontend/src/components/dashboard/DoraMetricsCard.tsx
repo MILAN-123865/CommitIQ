@@ -1,12 +1,15 @@
-import React from 'react'
-import Tooltip from '../common/Tooltip'
+import { Tooltip } from '../common/Tooltip'
 import { DORA_THRESHOLDS } from '../../constants/doraThresholds'
 
-export default function DoraMetricsCard({ tier = 'ELITE' }) {
+export interface DoraMetricsCardProps {
+  tier?: 'ELITE' | 'HIGH' | 'MEDIUM' | 'LOW' | string
+}
+
+export function DoraMetricsCard({ tier = 'ELITE' }: DoraMetricsCardProps) {
   const currentTier = tier.toUpperCase()
   const thresholdData = DORA_THRESHOLDS[currentTier] || DORA_THRESHOLDS.ELITE
 
-  const colorVariants = {
+  const colorVariants: Record<string, string> = {
     ELITE: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30',
     HIGH: 'bg-blue-500/10 text-blue-400 border-blue-500/30',
     MEDIUM: 'bg-amber-500/10 text-amber-400 border-amber-500/30',
@@ -21,7 +24,7 @@ export default function DoraMetricsCard({ tier = 'ELITE' }) {
         {/* Tooltip Wrapper Hook */}
         <Tooltip content={thresholdData}>
           <span
-            className={`px-2.5 py-1 text-xs font-bold tracking-wide uppercase border rounded-full transition-all ${colorVariants[currentTier]}`}
+            className={`px-2.5 py-1 text-xs font-bold tracking-wide uppercase border rounded-full transition-all ${colorVariants[currentTier] || colorVariants.ELITE}`}
           >
             {tier}
           </span>
@@ -31,3 +34,5 @@ export default function DoraMetricsCard({ tier = 'ELITE' }) {
     </div>
   )
 }
+
+export default DoraMetricsCard
