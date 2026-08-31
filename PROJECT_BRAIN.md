@@ -633,7 +633,7 @@ multi-repo refresh), `_refresh_single_repo` (skip active, launch rescan, excepti
 handling). The scheduler's internal job calls `run_rescan` with its own DB session, so no
 long-lived transactions are held between ticks.
 
- design/button-radius-standardization
+design/button-radius-standardization
 Implementation:
 backend/features/reports/pdf_service.py uses ReportLab (SimpleDocTemplate + Table + Paragraph) to build a multi-section PDF: Executive Summary, DORA Metrics, Cycle Time Analysis (with bottleneck table), Team Health, and a footer.
 The service fetches live data by calling the existing metric computation functions (compute_dora_metrics, compute_cycle_time_metrics, compute_team_health) and queries the latest HealthSnapshot for the overall score.
@@ -647,9 +647,6 @@ backend/tests/test_pdf_report.py covers: service raises ValueError for missing r
 
 Testing:
 backend/tests/test_pdf_report.py covers: service raises ValueError for missing repo, returns valid %PDF bytes, PDF content includes section labels, router returns 404 for missing repo, router returns 200 + application/pdf with correct headers for a valid repo.
-
-
-
 
 backend/tests/test_pdf_report.py covers: service raisesValueError for missing repo, returns valid %PDF bytes, PDFcontent includes section labels, router returns 404 for missing repo,router returns 200 + application/pdf with correct headers for avalid repo.
 
@@ -669,7 +666,6 @@ backend/tests/test_pdf_report.py covers: service raisesValueError for missing re
   - `HotspotMap.tsx`: Responsive bounding classes, legend wrapping, and pagination stacking.
   - `GraphExplorer.tsx`: Mobile-safe canvas dimensions, responsive stats HUD, and sidebar wrapping.
 - **Testing**: Verified with full test suite (`npm run test`, 17 test files, 83 tests passing).
-
 
 ### Support Time Window Parameters in DORA Metrics (Issue #375)
 
@@ -717,7 +713,6 @@ backend/tests/test_pdf_report.py covers: service raisesValueError for missing re
   - Expanded `HotspotMap.test.tsx` with unit tests for empty states, risk badges, and pagination under responsive layouts.
   - Verified with full test suite (`npm run test`, 16 test files, 78 tests passing).
 
-
 > > > > > > > origin/main
 > > > > > > > \=======
 > > > > > > > <<<<<<< HEAD
@@ -752,4 +747,4 @@ Health endpoint:
 `GET /health` now includes a `scheduler` key with
 `{ running, enabled, jobs: [{ id, name, next_run_time }] }` so operators can verify the
 scheduler is active via a single curl.
- main
+main
