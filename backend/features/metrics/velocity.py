@@ -30,7 +30,7 @@ def _iso_week_key(dt: datetime) -> str:
 
 def _week_start(dt: datetime) -> datetime:
     """Snap a datetime to the Monday 00:00 of its ISO week."""
-    return dt - timedelta(days=dt.weekday())
+    return (dt - timedelta(days=dt.weekday())).replace(hour=0, minute=0, second=0, microsecond=0)
 
 
 def _deviation(values: list[float]) -> float:

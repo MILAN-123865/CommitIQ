@@ -746,9 +746,7 @@ export default function DashboardPage() {
             )}
           </div>
 
-          {repoId && (
-            <VelocityDashboard repoId={repoId} />
-          )}
+          {repoId && <VelocityDashboard repoId={repoId} />}
           {repoId && (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
               <div className="w-full">

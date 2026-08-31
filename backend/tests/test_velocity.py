@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import math
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
@@ -98,7 +98,7 @@ def _make_commit(
     return c
 
 
-@pytest.mark.asyncio
+@pytest.mark.anyio
 async def test_empty_repo():
     db = AsyncMock()
     result_mock = MagicMock()
@@ -111,7 +111,7 @@ async def test_empty_repo():
     assert resp["contributors"] == []
 
 
-@pytest.mark.asyncio
+@pytest.mark.anyio
 async def test_single_commit():
     commit = _make_commit(insertions=20, deletions=5, files_changed=3)
     db = AsyncMock()
@@ -131,7 +131,7 @@ async def test_single_commit():
     assert resp["contributors"][0]["commit_pct"] == 100.0
 
 
-@pytest.mark.asyncio
+@pytest.mark.anyio
 async def test_multi_author():
     commits = [
         _make_commit(
@@ -180,13 +180,14 @@ async def test_multi_author():
     assert bob["commit_pct"] == pytest.approx(33.3, abs=0.1)
 
 
-@pytest.mark.asyncio
+@pytest.mark.anyio
 async def test_cadence_score_perfect():
     """Same number of commits each week → high cadence score."""
     commits = []
+    base = datetime(2025, 7, 7, 10, 0, tzinfo=timezone.utc)
     for week in range(4):
         for day in range(3):
-            dt = datetime(2025, 7 + week // 4, 1 + week * 7 + day, 10, 0, tzinfo=timezone.utc)
+            dt = base + timedelta(weeks=week, days=day)
             commits.append(_make_commit(committed_at=dt))
 
     db = AsyncMock()
@@ -198,12 +199,13 @@ async def test_cadence_score_perfect():
     assert resp["totals"]["cadence_score"] >= 50
 
 
-@pytest.mark.asyncio
+@pytest.mark.anyio
 async def test_streak_calculation():
     """Three consecutive weeks should give max streak of 3."""
     commits = []
+    base = datetime(2025, 7, 7, 10, 0, tzinfo=timezone.utc)
     for week_offset in range(3):
-        dt = datetime(2025, 6, 30 + week_offset * 7, 10, 0, tzinfo=timezone.utc)
+        dt = base + timedelta(weeks=week_offset)
         commits.append(_make_commit(committed_at=dt))
 
     db = AsyncMock()
@@ -215,7 +217,7 @@ async def test_streak_calculation():
     assert resp["totals"]["max_commit_streak_weeks"] >= 1
 
 
-@pytest.mark.asyncio
+@pytest.mark.anyio
 async def test_weekly_bucketing():
     """Commits in the same ISO week should be bucketed together."""
     monday = datetime(2025, 7, 7, 9, 0, tzinfo=timezone.utc)

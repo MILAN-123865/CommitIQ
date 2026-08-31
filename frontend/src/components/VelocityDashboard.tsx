@@ -1,34 +1,17 @@
 import { useEffect, useState } from 'react'
 import { getVelocityMetrics } from '../lib/api'
 import type { VelocityMetrics } from '../types'
-import {
-  Activity,
-  BarChart3,
-  Calendar,
-  Flame,
-  TrendingUp,
-  Users,
-  Zap,
-} from 'lucide-react'
+import { Activity, BarChart3, Calendar, Flame, TrendingUp, Users, Zap } from 'lucide-react'
 
 interface VelocityDashboardProps {
   repoId: string | number
 }
 
 function CadenceGauge({ score }: { score: number }) {
-  const color =
-    score >= 80
-      ? 'text-emerald-400'
-      : score >= 50
-        ? 'text-amber-400'
-        : 'text-rose-400'
+  const color = score >= 80 ? 'text-emerald-400' : score >= 50 ? 'text-amber-400' : 'text-rose-400'
 
   const bg =
-    score >= 80
-      ? 'from-emerald-500/30'
-      : score >= 50
-        ? 'from-amber-500/30'
-        : 'from-rose-500/30'
+    score >= 80 ? 'from-emerald-500/30' : score >= 50 ? 'from-amber-500/30' : 'from-rose-500/30'
 
   const circumference = 2 * Math.PI * 42
   const offset = circumference - (score / 100) * circumference
@@ -59,9 +42,7 @@ function CadenceGauge({ score }: { score: number }) {
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className={`font-head text-xl font-bold ${color}`}>
-          {score}
-        </span>
+        <span className={`font-head text-xl font-bold ${color}`}>{score}</span>
         <span className="text-[9px] text-slate-500 font-medium">cadence</span>
       </div>
     </div>
@@ -159,7 +140,7 @@ export function VelocityDashboard({ repoId }: VelocityDashboardProps) {
             </span>
           </div>
           <span className="font-head text-[28px] font-extralight text-white leading-none">
-            {totals.avg_lines_per_week.toLocaleString()}
+            {(totals.avg_lines_per_week ?? 0).toLocaleString()}
           </span>
         </div>
 
@@ -178,9 +159,7 @@ export function VelocityDashboard({ repoId }: VelocityDashboardProps) {
 
         <div className="bg-white/5 border border-white/5 rounded-[18px] p-4 flex flex-col items-center justify-center">
           <CadenceGauge score={totals.cadence_score} />
-          <span className="text-[10px] text-slate-500 font-medium mt-1">
-            Consistency
-          </span>
+          <span className="text-[10px] text-slate-500 font-medium mt-1">Consistency</span>
         </div>
       </div>
 
@@ -190,15 +169,13 @@ export function VelocityDashboard({ repoId }: VelocityDashboardProps) {
           <span className="font-head text-[10px] text-slate-400 font-semibold uppercase tracking-wider">
             Weekly Commit Throughput
           </span>
-          <span className="text-[10px] text-slate-500">
-            Last {recentWeeks.length} weeks shown
-          </span>
+          <span className="text-[10px] text-slate-500">Last {recentWeeks.length} weeks shown</span>
         </div>
 
         <div className="flex items-end gap-1 h-[100px]">
-          {recentWeeks.map((w) => (
+          {recentWeeks.map((w, idx) => (
             <div
-              key={w.label}
+              key={w.iso_week || w.label || idx}
               className="flex-1 flex flex-col items-center justify-end h-full group relative"
             >
               <div
@@ -225,9 +202,7 @@ export function VelocityDashboard({ repoId }: VelocityDashboardProps) {
 
         <div className="flex justify-between mt-2">
           {recentWeeks.length > 0 && (
-            <span className="text-[9px] text-slate-500">
-              {recentWeeks[0]?.label}
-            </span>
+            <span className="text-[9px] text-slate-500">{recentWeeks[0]?.label}</span>
           )}
           {recentWeeks.length > 1 && (
             <span className="text-[9px] text-slate-500">
@@ -248,15 +223,13 @@ export function VelocityDashboard({ repoId }: VelocityDashboardProps) {
           </div>
 
           <div className="space-y-2">
-            {contributors.slice(0, 5).map((c) => (
+            {contributors.slice(0, 5).map((c, idx) => (
               <div
-                key={c.name}
+                key={`${c.name}-${c.email || idx}`}
                 className="bg-white/[0.03] border border-white/5 rounded-xl px-4 py-3 flex items-center gap-3"
               >
                 <div className="min-w-0 flex-1">
-                  <div className="text-xs font-semibold text-slate-100 truncate">
-                    {c.name}
-                  </div>
+                  <div className="text-xs font-semibold text-slate-100 truncate">{c.name}</div>
                   <div className="text-[10px] text-slate-500 mt-0.5">
                     {c.commits} commits · {c.weeks_active} active weeks
                   </div>
