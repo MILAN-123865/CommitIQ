@@ -5,13 +5,14 @@ import AmbientBackground from './components/AmbientBackground'
 
 const LandingPage = lazy(() => import('./pages/LandingPage'))
 const AnalyzePage = lazy(() => import('./pages/AnalyzePage'))
+const CommitHealthRadar = lazy(() => import('./pages/CommitHealthRadar'))
 const DashboardPage = lazy(() => import('./pages/DashboardPage'))
 const CommitDetailPage = lazy(() => import('./pages/CommitDetailPage'))
 const DemoPage = lazy(() => import('./pages/DemoPage'))
 const ComparePage = lazy(() => import('./pages/ComparePage'))
 const HealthRadarPage = lazy(() => import('./pages/HealthRadarPage'))
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'))
-const CommitHealthRadar = lazy(() => import('./components/CommitHealthRadar'))
+
 const TeamCollaborationHub = lazy(() => import('./components/TeamCollaborationHub'))
 const ReleaseImpactAnalyzer = lazy(() => import('./components/ReleaseImpactAnalyzer'))
 
@@ -39,6 +40,7 @@ export default function App() {
             <Route path="/compare" element={<ComparePage />} />
             <Route path="/health-radar" element={<HealthRadarPage />} />
             <Route path="/demo" element={<DemoPage />} />
+            
             <Route path="/health" element={<CommitHealthRadar />} />
             <Route path="/team" element={<TeamCollaborationHub />} />
             <Route path="/releases" element={<ReleaseImpactAnalyzer />} />
