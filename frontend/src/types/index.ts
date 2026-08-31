@@ -495,6 +495,7 @@ export interface RepoCompareInsight {
 
 export interface VelocityWeek {
   label: string
+  iso_week?: string
   week_start: string
   commits: number
   insertions: number
@@ -694,4 +695,37 @@ export interface RepoCompareResponse {
   deltas: RepoCompareDelta
   insights: RepoCompareInsight[]
   verdict: string
+}
+
+export interface CommitQualityViolation {
+  rule: string
+  count: number
+}
+
+export interface CommitQualityContributor {
+  name: string
+  total: number
+  conventional: number
+  convention_rate: number
+  errors: number
+  warnings: number
+  infos: number
+}
+
+export interface CommitQualityMetrics {
+  quality_score: number
+  total_commits: number
+  conventional_commits: number
+  convention_rate: number
+  merge_commits: number
+  avg_subject_length: number
+  median_subject_length: number
+  total_violations: number
+  severity_breakdown: {
+    error: number
+    warning: number
+    info: number
+  }
+  top_violations: CommitQualityViolation[]
+  contributors: CommitQualityContributor[]
 }

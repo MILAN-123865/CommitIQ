@@ -26,6 +26,30 @@ vi.mock('./lib/api', () => ({
   getCodeQualityMetrics: vi.fn(() =>
     Promise.resolve({ churn_category: 'Low', ai_impact_score: 'Low' })
   ),
+  getVelocityMetrics: vi.fn(() =>
+    Promise.resolve({
+      totals: {
+        total_commits: 0,
+        avg_commits_per_week: 0,
+        avg_lines_per_week: 0,
+        cadence_score: 0,
+      },
+      weekly: [],
+      contributors: [],
+    })
+  ),
+  getCommitQuality: vi.fn(() =>
+    Promise.resolve({
+      total_commits: 0,
+      quality_score: 100,
+      convention_rate: 100,
+      error_free_rate: 100,
+      warning_free_rate: 100,
+      severity_breakdown: { error: 0, warning: 0, info: 0 },
+      top_violations: [],
+      contributors: [],
+    })
+  ),
   getGraph: vi.fn(),
   getHealthTimeline: vi.fn(),
   getIngestProgress: vi.fn(),

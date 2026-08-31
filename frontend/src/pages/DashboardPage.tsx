@@ -25,6 +25,7 @@ import { VelocityDashboard } from '../components/VelocityDashboard'
 import { ScheduledReportsDashboard } from '../components/ScheduledReportsDashboard'
 import { WeeklyDigestCard } from '../components/WeeklyDigestCard'
 import { RecommendationsCard } from '../components/RecommendationsCard'
+import { CommitQualityDashboard } from '../components/CommitQualityDashboard'
 import { TimeRangeSelector, type TimeRangePreset } from '../components/TimeRangeSelector'
 import { HealthBadge } from '../components/ui/HealthBadge'
 import { ThemeToggle } from '../components/ui/ThemeToggle'
@@ -780,6 +781,8 @@ export default function DashboardPage() {
           )}
 
           {repoId && <RecommendationsCard repoId={repoId} />}
+
+          {repoId && <CommitQualityDashboard repoId={repoId} />}
 
           {repoId && <ScheduledReportsDashboard repoId={repoId} />}
 

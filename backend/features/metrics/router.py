@@ -5,6 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.database import get_db
 from backend.features.metrics.code_quality import compute_code_quality
+from backend.features.metrics.commit_linter import compute_commit_quality
 from backend.features.metrics.cycle_time import compute_cycle_time_metrics
 from backend.features.metrics.dora import compute_dora_metrics
 from backend.features.metrics.team_health import compute_team_health
@@ -69,4 +70,15 @@ async def get_velocity_metrics(repo_id: int, db: AsyncSession = Depends(get_db))
         raise HTTPException(status_code=404, detail="Repository not found")
 
     metrics = await compute_velocity(db, repo_id)
+    return metrics
+
+
+@router.get("/repos/{repo_id}/commit-quality")
+async def get_commit_quality_metrics(repo_id: int, db: AsyncSession = Depends(get_db)):
+    """Return commit message quality analytics."""
+    repo = await db.get(Repo, repo_id)
+    if not repo:
+        raise HTTPException(status_code=404, detail="Repository not found")
+
+    metrics = await compute_commit_quality(db, repo_id)
     return metrics

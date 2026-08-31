@@ -10,9 +10,6 @@ interface VelocityDashboardProps {
 function CadenceGauge({ score }: { score: number }) {
   const color = score >= 80 ? 'text-emerald-400' : score >= 50 ? 'text-amber-400' : 'text-rose-400'
 
-  const bg =
-    score >= 80 ? 'from-emerald-500/30' : score >= 50 ? 'from-amber-500/30' : 'from-rose-500/30'
-
   const circumference = 2 * Math.PI * 42
   const offset = circumference - (score / 100) * circumference
 

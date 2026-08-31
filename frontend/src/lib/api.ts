@@ -33,6 +33,7 @@ import type {
   ReportPreview,
   WeeklyDigest,
   RecommendationsResponse,
+  CommitQualityMetrics,
 } from '../types'
 
 export type { NarrativeStreamChunk } from '../types'
@@ -482,4 +483,8 @@ export async function fetchNarrative(
 
 export async function getVelocityMetrics(repoId: string | number): Promise<VelocityMetrics> {
   return request<VelocityMetrics>(client.get(`/metrics/repos/${repoId}/velocity`))
+}
+
+export async function getCommitQuality(repoId: string | number): Promise<CommitQualityMetrics> {
+  return request<CommitQualityMetrics>(client.get(`/metrics/repos/${repoId}/commit-quality`))
 }
