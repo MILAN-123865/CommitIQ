@@ -56,13 +56,13 @@ function formatTimeAgo(dateString?: string | null): string {
 
   const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000)
   if (seconds < 60) return 'just now'
-  
+
   const minutes = Math.floor(seconds / 60)
   if (minutes < 60) return `${minutes} ${minutes === 1 ? 'minute' : 'minutes'} ago`
-  
+
   const hours = Math.floor(minutes / 60)
   if (hours < 24) return `${hours} ${hours === 1 ? 'hour' : 'hours'} ago`
-  
+
   const days = Math.floor(hours / 24)
   return `${days} ${days === 1 ? 'day' : 'days'} ago`
 }
@@ -296,11 +296,16 @@ export default function DashboardPage() {
             <div
               className="hidden lg:flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/5 text-[11px] text-slate-400 font-medium"
               data-testid="dashboard-header-last-updated"
-              title={lastUpdatedTimestamp ? `Last analysis job completed: ${new Date(lastUpdatedTimestamp).toLocaleString()}` : 'No previous analysis timestamp'}
+              title={
+                lastUpdatedTimestamp
+                  ? `Last analysis job completed: ${new Date(lastUpdatedTimestamp).toLocaleString()}`
+                  : 'No previous analysis timestamp'
+              }
             >
               <Clock className="w-3 h-3 text-purple-400" />
               <span>
-                Last updated: <span className="text-slate-200">{formatTimeAgo(lastUpdatedTimestamp)}</span>
+                Last updated:{' '}
+                <span className="text-slate-200">{formatTimeAgo(lastUpdatedTimestamp)}</span>
               </span>
             </div>
           </div>
