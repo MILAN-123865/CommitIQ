@@ -34,6 +34,7 @@ import type {
   WeeklyDigest,
   RecommendationsResponse,
   CommitQualityMetrics,
+  DeploymentTimeline,
 } from '../types'
 
 export type { NarrativeStreamChunk } from '../types'
@@ -487,4 +488,17 @@ export async function getVelocityMetrics(repoId: string | number): Promise<Veloc
 
 export async function getCommitQuality(repoId: string | number): Promise<CommitQualityMetrics> {
   return request<CommitQualityMetrics>(client.get(`/metrics/repos/${repoId}/commit-quality`))
+}
+
+export async function getDeploymentTimeline(
+  repoId: string | number,
+  limit?: number
+): Promise<DeploymentTimeline> {
+  const params: Record<string, string> = {}
+  if (limit !== undefined) params.limit = String(limit)
+  return request<DeploymentTimeline>(
+    client.get(`/repos/${repoId}/deployments`, {
+      params: Object.keys(params).length ? params : undefined,
+    })
+  )
 }

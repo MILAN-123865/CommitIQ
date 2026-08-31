@@ -50,6 +50,21 @@ vi.mock('./lib/api', () => ({
       contributors: [],
     })
   ),
+  getDeploymentTimeline: vi.fn(() =>
+    Promise.resolve({
+      deployments: [],
+      summary: {
+        total_deploys: 0,
+        success_count: 0,
+        failure_count: 0,
+        success_rate: 100,
+        most_recent: '',
+        by_environment: {},
+        by_provider: {},
+      },
+      daily: [],
+    })
+  ),
   getGraph: vi.fn(),
   getHealthTimeline: vi.fn(),
   getIngestProgress: vi.fn(),

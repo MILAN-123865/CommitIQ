@@ -729,3 +729,38 @@ export interface CommitQualityMetrics {
   top_violations: CommitQualityViolation[]
   contributors: CommitQualityContributor[]
 }
+
+export interface DeploymentEntry {
+  id: number
+  provider: string
+  environment: string
+  status: string
+  ref: string
+  sha: string
+  pipeline_id: string
+  deployed_at: string
+  env_color: string
+}
+
+export interface DeploymentDailyCount {
+  date: string
+  success: number
+  failure: number
+  total: number
+}
+
+export interface DeploymentSummary {
+  total_deploys: number
+  success_count: number
+  failure_count: number
+  success_rate: number
+  most_recent: string
+  by_environment: Record<string, { total: number; success: number; failure: number }>
+  by_provider: Record<string, number>
+}
+
+export interface DeploymentTimeline {
+  deployments: DeploymentEntry[]
+  summary: DeploymentSummary
+  daily: DeploymentDailyCount[]
+}
