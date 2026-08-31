@@ -27,6 +27,7 @@ import type {
   TeamHealthMetrics,
   CodeQualityMetrics,
   RepoCompareResponse,
+  VelocityMetrics,
   ReportSchedule,
   ReportScheduleListResponse,
   ReportPreview,
@@ -477,4 +478,8 @@ export async function fetchNarrative(
     const detail = axErr.response?.data?.detail || axErr.message
     throw new Error(detail)
   }
+}
+
+export async function getVelocityMetrics(repoId: string | number): Promise<VelocityMetrics> {
+  return request<VelocityMetrics>(client.get(`/metrics/repos/${repoId}/velocity`))
 }

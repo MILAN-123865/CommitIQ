@@ -21,6 +21,7 @@ import { NarrativeCard } from '../components/NarrativeCard'
 import { CycleTimeDashboard } from '../components/CycleTimeDashboard'
 import { DoraMetricsDashboard } from '../components/DoraMetricsDashboard'
 import { TeamHealthDashboard } from '../components/TeamHealthDashboard'
+import { VelocityDashboard } from '../components/VelocityDashboard'
 import { ScheduledReportsDashboard } from '../components/ScheduledReportsDashboard'
 import { WeeklyDigestCard } from '../components/WeeklyDigestCard'
 import { RecommendationsCard } from '../components/RecommendationsCard'
@@ -745,6 +746,9 @@ export default function DashboardPage() {
             )}
           </div>
 
+          {repoId && (
+            <VelocityDashboard repoId={repoId} />
+          )}
           {repoId && (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
               <div className="w-full">
