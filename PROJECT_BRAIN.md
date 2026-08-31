@@ -306,24 +306,14 @@ backend/features/reports/router.py exposes GET /api/repos/{repo_id}/report which
 backend/main.py registers the reports router under /api.
 backend/requirements.txt now includes reportlab>=4.0.0.
 
-<<<<<<< HEAD
 Testing:
 backend/tests/test_pdf_report.py covers: service raises ValueError for missing repo, returns valid %PDF bytes, PDF content includes section labels, router returns 404 for missing repo, router returns 200 + application/pdf with correct headers for a valid repo.
-=======
 
-<<<<<<< HEAD
 Testing:
 backend/tests/test_pdf_report.py covers: service raises ValueError for missing repo, returns valid %PDF bytes, PDF content includes section labels, router returns 404 for missing repo, router returns 200 + application/pdf with correct headers for a valid repo.
-=======
 
-<<<<<<< HEAD
-=======
 
-<<<<<<< HEAD
-=======
 
-<<<<<<< HEAD
-=======
 
 backend/tests/test_pdf_report.py covers: service raisesValueError for missing repo, returns valid %PDF bytes, PDFcontent includes section labels, router returns 404 for missing repo,router returns 200 + application/pdf with correct headers for avalid repo.
 
@@ -344,7 +334,6 @@ backend/tests/test_pdf_report.py covers: service raisesValueError for missing re
   - `GraphExplorer.tsx`: Mobile-safe canvas dimensions, responsive stats HUD, and sidebar wrapping.
 - **Testing**: Verified with full test suite (`npm run test`, 17 test files, 83 tests passing).
 
-<<<<<<< HEAD
 
 ### Support Time Window Parameters in DORA Metrics (Issue #375)
 
@@ -392,7 +381,6 @@ backend/tests/test_pdf_report.py covers: service raisesValueError for missing re
   - Expanded `HotspotMap.test.tsx` with unit tests for empty states, risk badges, and pagination under responsive layouts.
   - Verified with full test suite (`npm run test`, 16 test files, 78 tests passing).
 
-<<<<<<< HEAD
 
 > > > > > > > origin/main
 > > > > > > > \=======
