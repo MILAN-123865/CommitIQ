@@ -15,7 +15,7 @@ export function BusFactorTable({ modules }: BusFactorTableProps) {
 
   const filteredModules = useMemo(() => {
     const query = searchQuery.trim().toLowerCase()
-    
+
     // First, sort all modules by top contributor percentage
     const sorted = [...modules].sort((a, b) => b.top_contributor_pct - a.top_contributor_pct)
 
@@ -85,7 +85,9 @@ export function BusFactorTable({ modules }: BusFactorTableProps) {
           <div className="flex flex-col items-center justify-center h-48 text-slate-500 gap-2">
             <HelpCircle className="w-8 h-8 text-slate-600 animate-pulse" />
             <span className="text-sm font-medium">
-              {searchQuery ? `No modules matching "${searchQuery}"` : 'No contributor metrics compiled yet'}
+              {searchQuery
+                ? `No modules matching "${searchQuery}"`
+                : 'No contributor metrics compiled yet'}
             </span>
           </div>
         ) : (

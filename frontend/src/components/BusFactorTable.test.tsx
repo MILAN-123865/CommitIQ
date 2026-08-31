@@ -67,4 +67,41 @@ describe('BusFactorTable', () => {
     expect(rows[1]).toHaveTextContent('src/high_risk.ts')
     expect(rows[2]).toHaveTextContent('src/low_risk.ts')
   })
+
+  it('filters rows based on search input', async () => {
+    const userEvent = (await import('@testing-library/user-event')).default.setup()
+
+    render(
+      <BusFactorTable
+        modules={[
+          {
+            module_path: 'src/components/Button.tsx',
+            contributor_count: 2,
+            top_contributor: 'Alice',
+            top_contributor_email: 'alice@example.com',
+            top_contributor_pct: 60,
+            total_commits_to_module: 10,
+            risk_level: 'medium',
+            last_commit_sha: '111',
+          },
+          {
+            module_path: 'backend/server.py',
+            contributor_count: 1,
+            top_contributor: 'Bob',
+            top_contributor_email: 'bob@example.com',
+            top_contributor_pct: 90,
+            total_commits_to_module: 25,
+            risk_level: 'high',
+            last_commit_sha: '222',
+          },
+        ]}
+      />
+    )
+
+    const searchInput = screen.getByPlaceholderText(/filter modules or owners/i)
+    await userEvent.type(searchInput, 'backend')
+
+    expect(screen.getByText('backend/server.py')).toBeInTheDocument()
+    expect(screen.queryByText('src/components/Button.tsx')).not.toBeInTheDocument()
+  })
 })

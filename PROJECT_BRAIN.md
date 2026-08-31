@@ -303,6 +303,7 @@ Missing but obviously needed:
 - 2026-08-28: Implemented in-memory caching for Team Health calculations to improve dashboard response times (#376).
 - 2026-08-28: Integrated React Error Boundary around Code Quality Dashboard component (#380).
 - 2026-08-28: Added start_date and end_date filtering options to DORA metrics calculation API (#375).
+- 2026-08-30: Added real-time module path and owner search filter input to Bus Factor table (#384, #466).
 - 2026-08-30: Implemented local storage theme persistence and cross-tab synchronization with FOUC prevention (#383, #465).
 - 2026-08-30: Added relative 'Last updated' timestamp with detailed hover tooltip to dashboard header navigation (#382, #462).
 - 2026-08-30: Added informative hover tooltips for DORA metrics performance tiers and thresholds (#365, #464).
