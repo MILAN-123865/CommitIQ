@@ -303,6 +303,7 @@ Missing but obviously needed:
 - 2026-08-28: Implemented in-memory caching for Team Health calculations to improve dashboard response times (#376).
 - 2026-08-28: Integrated React Error Boundary around Code Quality Dashboard component (#380).
 - 2026-08-28: Added start_date and end_date filtering options to DORA metrics calculation API (#375).
+- 2026-08-30: Added CI/CD Pipeline Monitor dashboard with stage metrics, deployment status, and runner analytics (#483).
 - 2026-08-30: Added Team Collaboration Hub with activity feed, reviewer metrics, PR tracking, and sprint goals (#479, #480).
 - 2026-08-30: Added Commit Health Radar 5-tab dashboard with quality gate monitoring, team performance insights, and radar visualization (#477, #478).
 - 2026-08-30: Added real-time module path and owner search filter input to Bus Factor table (#384, #466).
