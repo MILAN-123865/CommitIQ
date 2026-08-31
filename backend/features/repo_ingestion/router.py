@@ -1215,9 +1215,50 @@ async def _active_contributors_map(db: AsyncSession, repo_ids: list[int]) -> dic
     return {repo_id: count for repo_id, count in result.all()}
 
 
-def _repo_to_out(repo: Repo, active_contributors_count: int = 0) -> RepoOut:
+async def _latest_completed_job_time(db: AsyncSession, repo_id: int) -> datetime | None:
+    result = await db.execute(
+        select(AnalysisJob.completed_at)
+        .where(
+            AnalysisJob.repo_id == repo_id,
+            AnalysisJob.status == "ready",
+            AnalysisJob.completed_at.isnot(None),
+        )
+        .order_by(desc(AnalysisJob.completed_at))
+        .limit(1)
+    )
+    return result.scalar_one_or_none()
+
+
+async def _latest_completed_job_map(db: AsyncSession, repo_ids: list[int]) -> dict[int, datetime]:
+    if not repo_ids:
+        return {}
+    subquery = (
+        select(
+            AnalysisJob.repo_id,
+            func.max(AnalysisJob.completed_at).label("max_completed_at"),
+        )
+        .where(
+            AnalysisJob.repo_id.in_(repo_ids),
+            AnalysisJob.status == "ready",
+            AnalysisJob.completed_at.isnot(None),
+        )
+        .group_by(AnalysisJob.repo_id)
+        .subquery()
+    )
+    result = await db.execute(
+        select(subquery.c.repo_id, subquery.c.max_completed_at)
+    )
+    return {repo_id: completed_at for repo_id, completed_at in result.all()}
+
+
+def _repo_to_out(
+    repo: Repo,
+    active_contributors_count: int = 0,
+    last_job_completed_at: datetime | None = None,
+) -> RepoOut:
     out = RepoOut.model_validate(repo)
     out.active_contributors_count = active_contributors_count
+    out.last_job_completed_at = last_job_completed_at or repo.last_updated_at
     return out
 
 
@@ -1242,7 +1283,31 @@ async def list_repos(
     repos = result.scalars().all()
     repo_ids = [repo.id for repo in repos]
     contrib_map = await _active_contributors_map(db, repo_ids)
-    return [_repo_to_out(repo, contrib_map.get(repo.id, 0)) for repo in repos]
+    completed_job_map = await _latest_completed_job_map(db, repo_ids)
+    return [
+        _repo_to_out(repo, contrib_map.get(repo.id, 0), completed_job_map.get(repo.id))
+        for repo in repos
+    ]
+
+
+@router.get("/by-slug/{slug}", response_model=RepoOut)
+async def get_repo_by_slug(slug: str, db: AsyncSession = Depends(get_db)):
+    repo = await _find_repo_by_slug(db, slug)
+    if not repo:
+        raise _http_error(404, "Repository not found.", "repo_not_found")
+    count = await _count_active_contributors(db, repo.id)
+    last_completed = await _latest_completed_job_time(db, repo.id)
+    return _repo_to_out(repo, count, last_completed)
+
+
+@router.get("/{repo_id}", response_model=RepoOut)
+async def get_repo(repo_id: int, db: AsyncSession = Depends(get_db)):
+    repo = await db.get(Repo, repo_id)
+    if not repo:
+        raise _http_error(404, "Repository not found.", "repo_not_found")
+    count = await _count_active_contributors(db, repo.id)
+    last_completed = await _latest_completed_job_time(db, repo.id)
+    return _repo_to_out(repo, count, last_completed)
 
 
 async def _build_repo_compare_item(db: AsyncSession, repo: Repo) -> RepoCompareItem:

@@ -28,6 +28,7 @@ export interface Repo {
   default_branch: string
   ingested_at: string | null
   last_updated_at: string | null
+  last_job_completed_at?: string | null
   total_commits: number
   analyzed_commits: number
   status: RepoStatus
@@ -492,10 +493,274 @@ export interface RepoCompareInsight {
   summary: string
 }
 
+export interface VelocityWeek {
+  label: string
+  iso_week?: string
+  week_start: string
+  commits: number
+  insertions: number
+  deletions: number
+  lines_changed: number
+  files_changed: number
+  contributor_count: number
+}
+
+export interface VelocityContributor {
+  name: string
+  email: string
+  commits: number
+  commit_pct: number
+  insertions: number
+  deletions: number
+  weeks_active: number
+  avg_commits_per_active_week: number
+}
+
+export interface VelocityTotals {
+  total_commits: number
+  total_insertions: number
+  total_deletions: number
+  num_weeks: number
+  num_active_contributors: number
+  avg_commits_per_week: number
+  avg_lines_per_week: number
+  avg_contributors_per_week: number
+  max_commit_streak_weeks: number
+  commit_deviation: number
+  lines_deviation: number
+  cadence_score: number
+}
+
+export interface VelocityMetrics {
+  weekly: VelocityWeek[]
+  totals: VelocityTotals
+  contributors: VelocityContributor[]
+}
+
+export interface ReportSchedule {
+  id: number
+  repo_id: number
+  name: string
+  description: string | null
+  cron_expression: string
+  cron_description: string
+  timezone: string
+  report_type: string
+  is_active: boolean
+  webhook_url: string | null
+  notification_email: string | null
+  include_narrative: boolean
+  last_run_at: string | null
+  next_run_at: string | null
+  last_delivery_status: string | null
+  consecutive_failures: number
+  max_retry_count: number
+  created_at: string | null
+  updated_at: string | null
+}
+
+export interface ReportDelivery {
+  id: number
+  schedule_id: number
+  repo_id: number
+  status: string
+  report_type: string
+  triggered_at: string | null
+  completed_at: string | null
+  duration_seconds: number | null
+  webhook_status_code: number | null
+  error_message: string | null
+  retry_count: number
+  snapshot_health_score: number | null
+  snapshot_commits_analyzed: number | null
+  snapshot_latest_sha: string | null
+}
+
+export interface ReportScheduleListResponse {
+  total: number
+  limit: number
+  offset: number
+  deliveries: ReportDelivery[]
+}
+
+export interface ReportPreview {
+  report_type: string
+  repo_name: string
+  repo_slug: string
+  generated_at: string
+  summary: {
+    total_commits: number
+    total_insertions: number
+    total_deletions: number
+    churn_rate_percent: number
+    unique_contributors: number
+    total_files_changed: number
+    default_branch: string
+  }
+  latest_commit?: {
+    sha: string
+    message: string
+    author: string | null
+    committed_at: string | null
+  }
+}
+
+export interface WeeklyDigestAlert {
+  severity: string
+  metric: string
+  message: string
+}
+
+export interface WeeklyDigest {
+  repo_name: string
+  repo_slug: string
+  generated_at: string
+  window_weeks: number
+  summary: {
+    total_commits: number
+    total_insertions: number
+    total_deletions: number
+    total_files_changed: number
+    unique_contributors: number
+  }
+  health: {
+    current_avg_score: number
+    previous_avg_score: number
+    trend: number
+    trend_direction: 'up' | 'down' | 'flat'
+  }
+  complexity: {
+    current_avg: number
+    previous_avg: number
+    trend: number
+  }
+  churn: {
+    current_avg_rate: number
+    previous_avg_rate: number
+    trend: number
+  }
+  bus_factor: {
+    total_modules: number
+    critical_risk_count: number
+    high_risk_count: number
+    top_risk_modules: Array<{
+      module: string
+      risk_level: string
+      top_contributor: string | null
+      top_contributor_pct: number
+      contributor_count: number
+    }>
+  }
+  top_contributors: Array<{
+    author: string
+    commits: number
+    insertions: number
+    deletions: number
+    files_changed: number
+  }>
+  persistent_hotspots: Array<{ path: string; snapshot_count: number }>
+  alerts: WeeklyDigestAlert[]
+}
+
+export interface HealthRecommendation {
+  id: string
+  category: string
+  severity: 'critical' | 'high' | 'medium' | 'low'
+  title: string
+  description: string
+  impact: number
+  effort: 'low' | 'medium' | 'high'
+  metric: string | null
+  current_value: string | null
+  target_value: string | null
+  file_path: string | null
+}
+
+export interface RecommendationsResponse {
+  repo_name: string
+  repo_slug: string
+  generated_at: string
+  health_score: number
+  total_recommendations: number
+  critical_count: number
+  high_count: number
+  medium_count: number
+  low_count: number
+  recommendations: HealthRecommendation[]
+}
+
 export interface RepoCompareResponse {
   base: RepoCompareItem
   head: RepoCompareItem
   deltas: RepoCompareDelta
   insights: RepoCompareInsight[]
   verdict: string
+}
+
+export interface CommitQualityViolation {
+  rule: string
+  count: number
+}
+
+export interface CommitQualityContributor {
+  name: string
+  total: number
+  conventional: number
+  convention_rate: number
+  errors: number
+  warnings: number
+  infos: number
+}
+
+export interface CommitQualityMetrics {
+  quality_score: number
+  total_commits: number
+  conventional_commits: number
+  convention_rate: number
+  merge_commits: number
+  avg_subject_length: number
+  median_subject_length: number
+  total_violations: number
+  severity_breakdown: {
+    error: number
+    warning: number
+    info: number
+  }
+  top_violations: CommitQualityViolation[]
+  contributors: CommitQualityContributor[]
+}
+
+export interface DeploymentEntry {
+  id: number
+  provider: string
+  environment: string
+  status: string
+  ref: string
+  sha: string
+  pipeline_id: string
+  deployed_at: string
+  env_color: string
+}
+
+export interface DeploymentDailyCount {
+  date: string
+  success: number
+  failure: number
+  total: number
+}
+
+export interface DeploymentSummary {
+  total_deploys: number
+  success_count: number
+  failure_count: number
+  success_rate: number
+  most_recent: string
+  by_environment: Record<string, { total: number; success: number; failure: number }>
+  by_provider: Record<string, number>
+}
+
+export interface DeploymentTimeline {
+  deployments: DeploymentEntry[]
+  summary: DeploymentSummary
+  daily: DeploymentDailyCount[]
 }

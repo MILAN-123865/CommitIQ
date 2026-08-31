@@ -98,6 +98,7 @@ class RepoOut(BaseModel):
     default_branch: str
     ingested_at: datetime | None
     last_updated_at: datetime | None
+    last_job_completed_at: datetime | None = None
     total_commits: int
     analyzed_commits: int
     status: RepoStatus

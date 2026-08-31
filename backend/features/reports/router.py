@@ -15,6 +15,7 @@ import logging
 
 from backend.database import get_db
 from backend.features.reports.pdf_service import generate_health_report
+from backend.features.reports.deployment_service import get_deployment_timeline
 from backend.shared.models import Repo
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import StreamingResponse
@@ -71,3 +72,16 @@ async def get_health_report(
         media_type="application/pdf",
         headers=headers,
     )
+
+
+@router.get("/repos/{repo_id}/deployments")
+async def get_deployments(
+    repo_id: int,
+    limit: int = 50,
+    db: AsyncSession = Depends(get_db),
+) -> dict:
+    """Return deployment timeline and summary stats."""
+    try:
+        return await get_deployment_timeline(db, repo_id, limit=limit)
+    except ValueError as exc:
+        raise HTTPException(status_code=404, detail=str(exc))

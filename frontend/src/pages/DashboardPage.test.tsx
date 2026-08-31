@@ -17,11 +17,68 @@ vi.mock('../lib/api', () => ({
   getCodeQualityMetrics: vi.fn(() =>
     Promise.resolve({ churn_category: 'Low', ai_impact_score: 'Low' })
   ),
+  getVelocityMetrics: vi.fn(() =>
+    Promise.resolve({
+      totals: {
+        total_commits: 0,
+        avg_commits_per_week: 0,
+        avg_lines_per_week: 0,
+        cadence_score: 0,
+      },
+      weekly: [],
+      contributors: [],
+    })
+  ),
+  getCommitQuality: vi.fn(() =>
+    Promise.resolve({
+      total_commits: 0,
+      quality_score: 100,
+      convention_rate: 100,
+      error_free_rate: 100,
+      warning_free_rate: 100,
+      severity_breakdown: { error: 0, warning: 0, info: 0 },
+      top_violations: [],
+      contributors: [],
+    })
+  ),
+  getDeploymentTimeline: vi.fn(() =>
+    Promise.resolve({
+      deployments: [],
+      summary: {
+        total_deploys: 0,
+        success_count: 0,
+        failure_count: 0,
+        success_rate: 100,
+        most_recent: '',
+        by_environment: {},
+        by_provider: {},
+      },
+      daily: [],
+    })
+  ),
   getGraph: vi.fn(),
   getHealthTimeline: vi.fn(),
   getIngestProgress: vi.fn(),
   getLLMUsage: vi.fn(),
   getRepoBySlug: vi.fn(),
+}))
+
+vi.mock('../components/VelocityDashboard', () => ({
+  VelocityDashboard: ({ repoId }: { repoId: string | number }) => (
+    <div data-testid="velocity-dashboard">velocity: {repoId}</div>
+  ),
+}))
+
+vi.mock('../components/CommitQualityDashboard', () => ({
+  CommitQualityDashboard: ({ repoId }: { repoId: string | number }) => (
+    <div data-testid="commit-quality-dashboard">commit quality: {repoId}</div>
+  ),
+}))
+
+vi.mock('../components/DeploymentTimeline', () => ({
+  DeploymentTimeline: ({ repoId }: { repoId: string | number }) => (
+    <div data-testid="deployment-timeline">deployments: {repoId}</div>
+  ),
 }))
 
 vi.mock('../components/BusFactorTable', () => ({
